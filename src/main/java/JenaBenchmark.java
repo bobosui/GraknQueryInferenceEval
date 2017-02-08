@@ -19,9 +19,11 @@ import java.time.Instant;
  * Created by szymon.klarman on 08/02/2017.
  */
 public class JenaBenchmark {
-    static Model model = RDFDataMgr.loadModel("transitive-test.rdf");
+
+    static Model model = RDFDataMgr.loadModel("grid-dataset.nt");
     static String patternString;
     static String queryString;
+
 
     public static void reasoningTest() {
 
@@ -46,6 +48,7 @@ public class JenaBenchmark {
 
     }
 
+
     public static void queryingTest() {
 
         patternString = "";
@@ -54,16 +57,50 @@ public class JenaBenchmark {
             int first = counter;
             int second = counter + 1;
             patternString = patternString +
-                    "?x" + first + " <grakn:relation> ?x" + second + " . ";
+                    "?x" + first + " <grakn:horizontal> ?x" + second + " . ";
+            //patternString = patternString +
+            //                "?rel <grakn:from> ?x" + first + " . " +
+            //                "?rel <grakn:to> ?x" + second + " . ";
             queryString = " select (count(?x1) as ?n) where { " + patternString + "}";
             Query query = QueryFactory.create(queryString);
             Instant start = Instant.now();
             try (QueryExecution qexec = QueryExecutionFactory.create(query, model)) {
                 ResultSet results = qexec.execSelect();
-                // for ( ; results.hasNext() ; ) {
-                //     QuerySolution soln = results.nextSolution();
+                 for ( ; results.hasNext() ; ) {
+                     QuerySolution soln = results.nextSolution();
                 //     System.out.println(soln.toString());
-                // }
+                 }
+            }
+            Instant end = Instant.now();
+            System.out.println("Sparql query " + counter + " evaluated in " + Duration.between(start, end));
+        }
+    }
+
+    public static void queryingTestGrid() {
+
+        patternString = "";
+
+        for (int counter = 1; counter < 100; counter++) {
+            int next = counter+1;
+
+            String first = "?x_"+counter+"_"+counter;
+            String second = "?x_"+next+"_"+counter;
+            String third = "?x_"+counter+"_"+next;
+            String fourth = "?x_"+next+"_"+next;
+
+            patternString = patternString +
+                    first + " <grakn:horizontal> " + second + " . " +
+                    first + " <grakn:vertical> " + third + " . " +
+                    second + " <grakn:vertical> " + fourth + " . " +
+                    third + " <grakn:horizontal> " + fourth + " . ";
+            queryString = " select (count(?x_1_1) as ?n) where { " + patternString + "}";
+            Query query = QueryFactory.create(queryString);
+            Instant start = Instant.now();
+            try (QueryExecution qexec = QueryExecutionFactory.create(query, model)) {
+                ResultSet results = qexec.execSelect();
+                 for ( ; results.hasNext() ; ) {
+                     QuerySolution soln = results.nextSolution();
+                 }
             }
             Instant end = Instant.now();
             System.out.println("Sparql query " + counter + " evaluated in " + Duration.between(start, end));
