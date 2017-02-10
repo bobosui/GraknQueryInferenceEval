@@ -22,11 +22,11 @@ public class GraknBenchmark {
 
             for (int counter = 2000; counter < 10000; counter = counter + 2000) {
 
-                //queryString = "match $x isa relation1; limit " + counter + ";";
-                //queryString = "match $x isa relation1;";
+                //queryString = "match $x isa horizontal; limit " + counter + ";";
+                //queryString = "match $x isa horizontal;";
 
-                //queryString = "match ('rel-from':$x, 'rel-to':$y) isa relation1; limit " + counter + ";";
-                queryString = "match ('rel-from':$x, 'rel-to':$y) isa relation1;";
+                //queryString = "match ('rel-from':$x, 'rel-to':$y) isa horizontal; limit " + counter + ";";
+                queryString = "match ('rel-from':$x, 'rel-to':$y) isa horizontal;";
 
                 testQuery = qb.parse(queryString);
 
@@ -39,6 +39,29 @@ public class GraknBenchmark {
             }
         }
 
+    public static void reasoningTestGrid() {
+
+        QueryBuilder qb = graknGraph.graql().infer(true);
+
+        for (int counter = 2000; counter < 10000; counter = counter + 2000) {
+
+            //queryString = "match $x isa diagonal; limit " + counter + ";";
+            //queryString = "match $x isa diagonal;";
+
+            //queryString = "match ('rel-from':$x, 'rel-to':$y) isa diagonal; limit " + counter + ";";
+            queryString = "match ('rel-from':$x, 'rel-to':$y) isa diagonal;";
+
+            testQuery = qb.parse(queryString);
+
+            Instant start = Instant.now();
+
+            testQuery.execute();
+
+            Instant end = Instant.now();
+            System.out.println("Query: " + queryString + " evaluated in " + Duration.between(start, end));
+        }
+    }
+
         public static void queryingTest() {
 
             QueryBuilder qb2 = graknGraph.graql().infer(false);
@@ -48,7 +71,7 @@ public class GraknBenchmark {
             for (int counter = 1; counter < 100; counter++) {
                 int first = counter;
                 int second = counter+1;
-                queryString = queryString + "('rel-from':$x"+ first +", 'rel-to':$x"+ second +") isa relation1; ";
+                queryString = queryString + "('rel-from':$x"+ first +", 'rel-to':$x"+ second +") isa horizontal; ";
 
                 testQuery = qb2.parse(queryString);
 
@@ -67,7 +90,7 @@ public class GraknBenchmark {
 
         queryString = "match ";
 
-        for (int counter = 1; counter < 100; counter++) {
+        for (int counter = 1; counter < 49; counter++) {
                 int next = counter+1;
 
                 String first = "$x_"+counter+"_"+counter;
@@ -83,6 +106,7 @@ public class GraknBenchmark {
 
                 testQuery = qb2.parse(queryString);
 
+                System.out.println(queryString);
                 Instant start = Instant.now();
 
                 testQuery.execute();

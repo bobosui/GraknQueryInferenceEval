@@ -101,4 +101,22 @@ public class NeoBenchmark {
         session.close();
         driver.close();
     }
+
+    public static void transitiveQueryingTestGrid() {
+
+        String queryString = " MATCH (n1)-[:HORIZONTAL*2]->(n)-[:VERTICAL*2]->(n2) RETURN n1 ";
+
+        Instant start = Instant.now();
+
+        StatementResult result = session.run( queryString );
+
+        result.list();
+
+        Instant end = Instant.now();
+        System.out.println("Transitive query evaluated in " + Duration.between(start, end));
+
+        session.close();
+        driver.close();
+    }
+
 }

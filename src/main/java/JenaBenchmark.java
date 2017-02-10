@@ -1,3 +1,4 @@
+import org.apache.jena.query.Dataset;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -11,6 +12,8 @@ import org.apache.jena.reasoner.Reasoner;
 import org.apache.jena.reasoner.rulesys.GenericRuleReasoner;
 import org.apache.jena.reasoner.rulesys.Rule;
 import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.tdb.TDBFactory;
+import org.apache.jena.tdb.TDBLoader;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -20,19 +23,22 @@ import java.time.Instant;
  */
 public class JenaBenchmark {
 
-    static Model model = RDFDataMgr.loadModel("grid-dataset.nt");
+    static Dataset dataset = TDBFactory.createDataset("tdb");
+    static Model model = dataset.getNamedModel("http://nameFile");
+   // TDBLoader.loadModel(model, "grid-dataset.nt");
+    // static Model model = RDFDataMgr.loadModel("grid-dataset.nt");
     static String patternString;
     static String queryString;
 
 
     public static void reasoningTest() {
 
-        String rules = "[rule1: (?a <grakn:relation> ?b) (?b <grakn:relation> ?c) -> (?a <grakn:relation> ?c)]";
+        String rules = "[rule1: (?a <grakn:horizontal> ?b) (?b <grakn:horizontal> ?c) -> (?a <grakn:horizontal> ?c)]";
         Instant start = Instant.now();
         Reasoner reasoner = new GenericRuleReasoner(Rule.parseRules(rules));
         InfModel inf = ModelFactory.createInfModel(reasoner, model);
 
-        String queryString = "select (count(?x) as ?n) where {?x <grakn:relation> ?y}";
+        String queryString = "select (count(?x) as ?n) where {?x <grakn:horizontal> ?y}";
 
         Query query = QueryFactory.create(queryString);
 
@@ -48,6 +54,31 @@ public class JenaBenchmark {
 
     }
 
+    public static void reasoningTestGrid() {
+
+        String rules =
+                "[rule1: (?a <grakn:horizontal> ?b) (?b <grakn:horizontal> ?c) -> (?a <grakn:horizontal> ?c)] " +
+                "[rule2: (?a <grakn:vertical> ?b) (?b <grakn:vertical> ?c) -> (?a <grakn:vertical> ?c)] " +
+                "[rule3: (?a <grakn:horizontal> ?b) (?b <grakn:vertical> ?c) -> (?a <grakn:diagonal> ?c)]";
+        Instant start = Instant.now();
+        Reasoner reasoner = new GenericRuleReasoner(Rule.parseRules(rules));
+        InfModel inf = ModelFactory.createInfModel(reasoner, model);
+
+        String queryString = "select (count(?x) as ?n) where {?x <grakn:diagonal> ?y}";
+
+        Query query = QueryFactory.create(queryString);
+
+        try (QueryExecution qexec = QueryExecutionFactory.create(query, inf)) {
+            ResultSet results = qexec.execSelect();
+            for ( ; results.hasNext() ; ) {
+                QuerySolution soln = results.nextSolution();
+                System.out.println(soln.toString());
+            }
+        }
+        Instant end = Instant.now();
+        System.out.println("Sparql query " + queryString + " evaluated in " + Duration.between(start, end));
+
+    }
 
     public static void queryingTest() {
 
@@ -109,7 +140,7 @@ public class JenaBenchmark {
 
     public static void transitiveQueryingTest() {
 
-        queryString = "select (count(?x) as ?n) where {?x <grakn:relation>+ ?y}";
+        queryString = "select (count(?x) as ?n) where {?x <grakn:horizontal>+ ?y}";
 
         Query query = QueryFactory.create(queryString);
         Instant start = Instant.now();
@@ -119,6 +150,24 @@ public class JenaBenchmark {
            //      QuerySolution soln = results.nextSolution();
            //      System.out.println(soln.toString());
            //  }
+        }
+        Instant end = Instant.now();
+        System.out.println("Sparql query " + queryString + " evaluated in " + Duration.between(start, end));
+
+    }
+
+    public static void transitiveQueryingTestGrid() {
+
+        queryString = "select (count(?x) as ?n) where {?x (<grakn:horizontal>/<grakn:horizontal>/<grakn:vertical>/<grakn:vertical>) ?y}";
+
+        Query query = QueryFactory.create(queryString);
+        Instant start = Instant.now();
+        try (QueryExecution qexec = QueryExecutionFactory.create(query, model)) {
+            ResultSet results = qexec.execSelect();
+              for ( ; results.hasNext() ; ) {
+                  QuerySolution soln = results.nextSolution();
+                  System.out.println(soln.toString());
+              }
         }
         Instant end = Instant.now();
         System.out.println("Sparql query " + queryString + " evaluated in " + Duration.between(start, end));

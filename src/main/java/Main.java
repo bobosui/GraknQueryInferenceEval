@@ -16,11 +16,14 @@ public class Main {
         //GraknBenchmark.queryingTest();
         //GraknBenchmark.queryingTestGrid();
         //NeoBenchmark.queryingTest();
-        NeoBenchmark.queryingTestGrid();
+        //NeoBenchmark.queryingTestGrid();
         //NeoBenchmark.transitiveQueryingTest();
+        NeoBenchmark.transitiveQueryingTestGrid();
         //JenaBenchmark.queryingTest();
+        //JenaBenchmark.reasoningTestGrid();
         //JenaBenchmark.reasoningTest();
         //JenaBenchmark.transitiveQueryingTest();
+        //JenaBenchmark.transitiveQueryingTestGrid();
         //JenaBenchmark.queryingTestGrid();
 
 
@@ -30,24 +33,28 @@ public class Main {
 //            e.printStackTrace();
 //        }
 
-        /*
+/*
         try {
             DataGenerator.generateGraqlCsv();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        */
+*/
 
-       /*
+/*
         try {
             DataGenerator.generateCypher();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
 */
-
-
-
+/*
+        try {
+            DataGenerator.generateNeoCsv();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+*/
 
     }
 }
