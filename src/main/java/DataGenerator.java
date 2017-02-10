@@ -8,7 +8,7 @@ import java.io.PrintWriter;
 public class DataGenerator {
 
     static int sizeX = 100;
-    static int sizeY = 1;
+    static int sizeY = 100;
 
     public static void generateRdf() throws FileNotFoundException {
 

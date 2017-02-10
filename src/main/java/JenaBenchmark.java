@@ -24,8 +24,7 @@ import java.time.Instant;
 public class JenaBenchmark {
 
     static Dataset dataset = TDBFactory.createDataset("tdb");
-    static Model model = dataset.getNamedModel("http://nameFile");
-   // TDBLoader.loadModel(model, "grid-dataset.nt");
+    static Model model = dataset.getNamedModel("http://grid-test");
     // static Model model = RDFDataMgr.loadModel("grid-dataset.nt");
     static String patternString;
     static String queryString;
@@ -108,7 +107,7 @@ public class JenaBenchmark {
     }
 
     public static void queryingTestGrid() {
-
+        //TDBLoader.loadModel(model, "grid-dataset.nt");
         patternString = "";
 
         for (int counter = 1; counter < 100; counter++) {
@@ -131,6 +130,7 @@ public class JenaBenchmark {
                 ResultSet results = qexec.execSelect();
                  for ( ; results.hasNext() ; ) {
                      QuerySolution soln = results.nextSolution();
+                     //System.out.println(soln.toString());
                  }
             }
             Instant end = Instant.now();

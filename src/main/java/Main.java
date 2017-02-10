@@ -18,21 +18,21 @@ public class Main {
         //NeoBenchmark.queryingTest();
         //NeoBenchmark.queryingTestGrid();
         //NeoBenchmark.transitiveQueryingTest();
-        NeoBenchmark.transitiveQueryingTestGrid();
+        //NeoBenchmark.transitiveQueryingTestGrid();
         //JenaBenchmark.queryingTest();
         //JenaBenchmark.reasoningTestGrid();
         //JenaBenchmark.reasoningTest();
         //JenaBenchmark.transitiveQueryingTest();
         //JenaBenchmark.transitiveQueryingTestGrid();
-        //JenaBenchmark.queryingTestGrid();
+        JenaBenchmark.queryingTestGrid();
 
-
-//        try {
-//            DataGenerator.generateRdf();
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
-
+/*
+        try {
+            DataGenerator.generateRdf();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+*/
 /*
         try {
             DataGenerator.generateGraqlCsv();
