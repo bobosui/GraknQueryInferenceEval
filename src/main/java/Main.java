@@ -13,8 +13,9 @@ public class Main {
         logger.setLevel(Level.OFF);
 
         //GraknBenchmark.reasoningTest();
+        GraknBenchmark.reasoningTestGrid();
         //GraknBenchmark.queryingTest();
-        //GraknBenchmark.queryingTestGrid();
+       // GraknBenchmark.queryingTestGrid();
         //NeoBenchmark.queryingTest();
         //NeoBenchmark.queryingTestGrid();
         //NeoBenchmark.transitiveQueryingTest();
@@ -24,7 +25,9 @@ public class Main {
         //JenaBenchmark.reasoningTest();
         //JenaBenchmark.transitiveQueryingTest();
         //JenaBenchmark.transitiveQueryingTestGrid();
-        JenaBenchmark.queryingTestGrid();
+        //JenaBenchmark.queryingTestGrid();
+
+        //GraknBenchmark.queryingTypes();
 
 /*
         try {

@@ -43,13 +43,13 @@ public class GraknBenchmark {
 
         QueryBuilder qb = graknGraph.graql().infer(true);
 
-        for (int counter = 2000; counter < 10000; counter = counter + 2000) {
+        for (int counter = 100; counter < 10000; counter = counter + 100) {
 
             //queryString = "match $x isa diagonal; limit " + counter + ";";
             //queryString = "match $x isa diagonal;";
 
-            //queryString = "match ('rel-from':$x, 'rel-to':$y) isa diagonal; limit " + counter + ";";
-            queryString = "match ('rel-from':$x, 'rel-to':$y) isa diagonal;";
+            queryString = "match ('rel-from':$x, 'rel-to':$y) isa diagonal; limit " + counter + ";";
+            //queryString = "match ('rel-from':$x, 'rel-to':$y) isa diagonal;";
 
             testQuery = qb.parse(queryString);
 
@@ -90,7 +90,7 @@ public class GraknBenchmark {
 
         queryString = "match ";
 
-        for (int counter = 1; counter < 49; counter++) {
+        for (int counter = 1; counter < 99; counter++) {
                 int next = counter+1;
 
                 String first = "$x_"+counter+"_"+counter;
@@ -115,6 +115,28 @@ public class GraknBenchmark {
                 System.out.println("Query: " + counter + " evaluated in " + Duration.between(start, end));
             }
         }
+
+    public static void queryingTypes() {
+
+        QueryBuilder qb2 = graknGraph.graql().infer(false);
+
+        queryString = "match ";
+
+        for (int counter = 1; counter < 200; counter++) {
+
+            queryString = queryString + "$x"+counter + " type-name horizontal; " + "$y"+counter + " type-name vertical; " + "$z"+counter + " type-name role-to; ";
+
+            testQuery = qb2.parse(queryString);
+
+            System.out.println(queryString);
+            Instant start = Instant.now();
+
+            testQuery.execute();
+
+            Instant end = Instant.now();
+            System.out.println("Query: " + counter + " evaluated in " + Duration.between(start, end));
+        }
+    }
     }
 
 

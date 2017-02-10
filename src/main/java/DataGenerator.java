@@ -36,7 +36,7 @@ public class DataGenerator {
     }
 
     public static void generateGraqlCsv() throws FileNotFoundException {
-
+        String entity1, entity2, entity3;
         int right, bottom;
 
         File outputFile1 = new File("grid-entities.csv");
@@ -44,16 +44,19 @@ public class DataGenerator {
         PrintWriter out_writer1 = new PrintWriter(outputFile1);
         PrintWriter out_writer2 = new PrintWriter(outputFile2);
 
-        out_writer1.println("x,y");
-        out_writer2.println("xin,yin,xout,yout,relation");
+        out_writer1.println("name");
+        out_writer2.println("name1,name2,relation");
 
         for (int x = 1; x <= sizeX; x++) {
             for (int y = 1; y <= sizeY; y++) {
                 right = x + 1;
                 bottom = y + 1;
-                out_writer1.println(x+","+y);
-                if (x < sizeX) out_writer2.println(x+","+y+","+right+","+y+","+"horizontal");
-                if (y < sizeY) out_writer2.println(x+","+y+","+x+","+bottom+","+"vertical");
+                entity1 = "entity_" + x + "_" + y;
+                entity2 = "entity_" + right + "_" + y;
+                entity3 = "entity_" + x + "_" + bottom;
+                out_writer1.println(entity1);
+                if (x < sizeX) out_writer2.println(entity1 + "," + entity2 + ",horizontal");
+                if (y < sizeY) out_writer2.println(entity1 + "," + entity3 + ",vertical");
             }
         }
 

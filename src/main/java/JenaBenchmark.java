@@ -4,6 +4,7 @@ import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.ReadWrite;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.InfModel;
 import org.apache.jena.rdf.model.Model;
@@ -12,6 +13,7 @@ import org.apache.jena.reasoner.Reasoner;
 import org.apache.jena.reasoner.rulesys.GenericRuleReasoner;
 import org.apache.jena.reasoner.rulesys.Rule;
 import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.tdb.TDB;
 import org.apache.jena.tdb.TDBFactory;
 import org.apache.jena.tdb.TDBLoader;
 
@@ -23,9 +25,11 @@ import java.time.Instant;
  */
 public class JenaBenchmark {
 
-    static Dataset dataset = TDBFactory.createDataset("tdb");
-    static Model model = dataset.getNamedModel("http://grid-test");
-    // static Model model = RDFDataMgr.loadModel("grid-dataset.nt");
+    static Dataset dataset = TDBFactory.createDataset("./tdb");
+    static Model modelGrid = dataset.getNamedModel("http://grid-test");
+    static Dataset dataset2 = TDBFactory.createDataset("./tdb2");
+    static Model modelChain = dataset2.getNamedModel("http://chain-test");
+    //static Model modelGrid = RDFDataMgr.loadModel("grid-dataset.nt");
     static String patternString;
     static String queryString;
 
@@ -35,7 +39,7 @@ public class JenaBenchmark {
         String rules = "[rule1: (?a <grakn:horizontal> ?b) (?b <grakn:horizontal> ?c) -> (?a <grakn:horizontal> ?c)]";
         Instant start = Instant.now();
         Reasoner reasoner = new GenericRuleReasoner(Rule.parseRules(rules));
-        InfModel inf = ModelFactory.createInfModel(reasoner, model);
+        InfModel inf = ModelFactory.createInfModel(reasoner, modelChain);
 
         String queryString = "select (count(?x) as ?n) where {?x <grakn:horizontal> ?y}";
 
@@ -54,14 +58,12 @@ public class JenaBenchmark {
     }
 
     public static void reasoningTestGrid() {
-
         String rules =
-                "[rule1: (?a <grakn:horizontal> ?b) (?b <grakn:horizontal> ?c) -> (?a <grakn:horizontal> ?c)] " +
-                "[rule2: (?a <grakn:vertical> ?b) (?b <grakn:vertical> ?c) -> (?a <grakn:vertical> ?c)] " +
-                "[rule3: (?a <grakn:horizontal> ?b) (?b <grakn:vertical> ?c) -> (?a <grakn:diagonal> ?c)]";
+               "[rule1: (?a <grakn:horizontal> ?b) (?b <grakn:horizontal> ?c) " +
+               "(?c <grakn:vertical> ?d) (?d <grakn:vertical> ?e) -> (?a <grakn:diagonal> ?e)] ";
         Instant start = Instant.now();
         Reasoner reasoner = new GenericRuleReasoner(Rule.parseRules(rules));
-        InfModel inf = ModelFactory.createInfModel(reasoner, model);
+        InfModel inf = ModelFactory.createInfModel(reasoner, modelGrid);
 
         String queryString = "select (count(?x) as ?n) where {?x <grakn:diagonal> ?y}";
 
@@ -80,7 +82,7 @@ public class JenaBenchmark {
     }
 
     public static void queryingTest() {
-
+        TDBLoader.loadModel(modelChain, "grid-dataset.nt");
         patternString = "";
 
         for (int counter = 1; counter < 100; counter++) {
@@ -94,7 +96,7 @@ public class JenaBenchmark {
             queryString = " select (count(?x1) as ?n) where { " + patternString + "}";
             Query query = QueryFactory.create(queryString);
             Instant start = Instant.now();
-            try (QueryExecution qexec = QueryExecutionFactory.create(query, model)) {
+            try (QueryExecution qexec = QueryExecutionFactory.create(query, modelChain)) {
                 ResultSet results = qexec.execSelect();
                  for ( ; results.hasNext() ; ) {
                      QuerySolution soln = results.nextSolution();
@@ -107,7 +109,7 @@ public class JenaBenchmark {
     }
 
     public static void queryingTestGrid() {
-        //TDBLoader.loadModel(model, "grid-dataset.nt");
+        //TDBLoader.loadModel(modelGrid, "grid-dataset.nt");
         patternString = "";
 
         for (int counter = 1; counter < 100; counter++) {
@@ -126,7 +128,7 @@ public class JenaBenchmark {
             queryString = " select (count(?x_1_1) as ?n) where { " + patternString + "}";
             Query query = QueryFactory.create(queryString);
             Instant start = Instant.now();
-            try (QueryExecution qexec = QueryExecutionFactory.create(query, model)) {
+            try (QueryExecution qexec = QueryExecutionFactory.create(query, modelGrid)) {
                 ResultSet results = qexec.execSelect();
                  for ( ; results.hasNext() ; ) {
                      QuerySolution soln = results.nextSolution();
@@ -144,7 +146,7 @@ public class JenaBenchmark {
 
         Query query = QueryFactory.create(queryString);
         Instant start = Instant.now();
-        try (QueryExecution qexec = QueryExecutionFactory.create(query, model)) {
+        try (QueryExecution qexec = QueryExecutionFactory.create(query, modelChain)) {
             ResultSet results = qexec.execSelect();
            //  for ( ; results.hasNext() ; ) {
            //      QuerySolution soln = results.nextSolution();
@@ -162,7 +164,7 @@ public class JenaBenchmark {
 
         Query query = QueryFactory.create(queryString);
         Instant start = Instant.now();
-        try (QueryExecution qexec = QueryExecutionFactory.create(query, model)) {
+        try (QueryExecution qexec = QueryExecutionFactory.create(query, modelGrid)) {
             ResultSet results = qexec.execSelect();
               for ( ; results.hasNext() ; ) {
                   QuerySolution soln = results.nextSolution();
