@@ -1,6 +1,14 @@
+import ai.grakn.concept.ConceptId;
+import ai.grakn.concept.Relation;
+import ai.grakn.exception.GraknValidationException;
+import ai.grakn.graql.InsertQuery;
+import ai.grakn.graql.QueryBuilder;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+
+import static ai.grakn.graql.Graql.var;
 
 /**
  * Created by szymon.klarman on 08/02/2017.
@@ -64,6 +72,55 @@ public class DataGenerator {
         out_writer1.close();
         out_writer2.flush();
         out_writer2.close();
+    }
+
+    public static void generateDataWithGraknCore() {
+        Relation[][] grid = new Relation[sizeX+1][sizeY+1];
+
+        QueryBuilder qb = GraknBenchmark.graknGraph.graql().infer(false);
+        InsertQuery startRel = qb.insert(var("x").isa("relation1").
+                rel("horizontal", var("x")).
+                rel("vertical", var("x")));
+        grid[sizeX][sizeY] = startRel.iterator().next().get("x").asRelation();
+        try {
+            GraknBenchmark.graknGraph.commit();
+        } catch (GraknValidationException e) {
+            e.printStackTrace();
+        }
+
+        for (int x = sizeX; x >= 1; x--) {
+            for (int y = sizeY; y >= 1; y--) {
+
+                if (x < sizeX && y < sizeY) {
+                    ConceptId hor = grid[x + 1][y].asRelation().getId();
+                    ConceptId ver = grid[x][y + 1].asRelation().getId();
+                    InsertQuery nextRel = qb.match(var("hor").id(hor), var("ver").id(ver)).
+                            insert(var("rel").isa("relation1").rel("horizontal", var("hor")).rel("vertical", var("ver")));
+                    grid[x][y] = nextRel.iterator().next().get("rel").asRelation();
+                }
+
+                if (x < sizeX && y == sizeY) {
+                    ConceptId hor = grid[x + 1][y].asRelation().getId();
+                    InsertQuery nextRel = qb.match(var("hor").id(hor)).
+                            insert(var("rel").isa("relation1").rel("horizontal", var("hor")));
+                    grid[x][y] = nextRel.iterator().next().get("rel").asRelation();
+                }
+
+                if (x == sizeX && y < sizeY) {
+                    ConceptId ver = grid[x][y + 1].asRelation().getId();
+                    InsertQuery nextRel = qb.match(var("ver").id(ver)).
+                            insert(var("rel").isa("relation1").rel("vertical", var("ver")));
+                    grid[x][y] = nextRel.iterator().next().get("rel").asRelation();
+                }
+                try {
+                    GraknBenchmark.graknGraph.commit();
+                } catch (GraknValidationException e) {
+                    e.printStackTrace();
+                }
+
+                System.out.println("x="+ x + " y=" + y);
+            }
+        }
     }
 
     public static void generateCypher() throws FileNotFoundException {

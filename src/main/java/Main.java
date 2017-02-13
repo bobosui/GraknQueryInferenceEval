@@ -12,10 +12,6 @@ public class Main {
         Logger logger = (Logger) org.slf4j.LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
         logger.setLevel(Level.OFF);
 
-        //GraknBenchmark.reasoningTest();
-        GraknBenchmark.reasoningTestGrid();
-        //GraknBenchmark.queryingTest();
-       // GraknBenchmark.queryingTestGrid();
         //NeoBenchmark.queryingTest();
         //NeoBenchmark.queryingTestGrid();
         //NeoBenchmark.transitiveQueryingTest();
@@ -28,7 +24,13 @@ public class Main {
         //JenaBenchmark.queryingTestGrid();
 
         //GraknBenchmark.queryingTypes();
+        //GraknBenchmark.reasoningTest();
+        //GraknBenchmark.reasoningTestGrid();
+        //GraknBenchmark.queryingTest();
+        GraknBenchmark.queryingTestGrid();
 
+        //DataGenerator.generateDataWithGraknCore();
+        //GraknBenchmark.queryingTestGridSimple();
 /*
         try {
             DataGenerator.generateRdf();

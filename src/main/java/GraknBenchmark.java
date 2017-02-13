@@ -12,7 +12,7 @@ import java.time.Instant;
 public class GraknBenchmark {
 
         static String keyspace = "grakn";
-        static GraknGraph graknGraph = Grakn.factory(Grakn.DEFAULT_URI, keyspace).getGraph();
+        public static GraknGraph graknGraph = Grakn.factory(Grakn.DEFAULT_URI, keyspace).getGraph();
         static String queryString;
         static MatchQuery testQuery;
 
@@ -43,12 +43,12 @@ public class GraknBenchmark {
 
         QueryBuilder qb = graknGraph.graql().infer(true);
 
-        for (int counter = 100; counter < 10000; counter = counter + 100) {
+        for (int counter = 1000; counter < 10000; counter = counter + 1000) {
 
-            //queryString = "match $x isa diagonal; limit " + counter + ";";
+            queryString = "match $x isa diagonal; limit " + counter + ";";
             //queryString = "match $x isa diagonal;";
 
-            queryString = "match ('rel-from':$x, 'rel-to':$y) isa diagonal; limit " + counter + ";";
+            //queryString = "match ('rel-from':$x, 'rel-to':$y) isa diagonal; limit " + counter + ";";
             //queryString = "match ('rel-from':$x, 'rel-to':$y) isa diagonal;";
 
             testQuery = qb.parse(queryString);
@@ -115,6 +115,37 @@ public class GraknBenchmark {
                 System.out.println("Query: " + counter + " evaluated in " + Duration.between(start, end));
             }
         }
+
+    public static void queryingTestGridSimple() {
+
+        QueryBuilder qb2 = graknGraph.graql().infer(false);
+
+        queryString = "match ";
+
+        for (int counter = 1; counter < 99; counter++) {
+            int next = counter+1;
+
+            String first = "$x_"+counter+"_"+counter;
+            String second = "$x_"+next+"_"+counter;
+            String third = "$x_"+counter+"_"+next;
+            String fourth = "$x_"+next+"_"+next;
+
+            queryString = queryString +
+                    first + "('horizontal':" + second + ", 'vertical':" + third + ") isa relation1; " +
+                    second + "('vertical':" + fourth + ") isa relation1; " +
+                    third + "('horizontal':" + fourth + ") isa relation1;";
+
+            testQuery = qb2.parse(queryString);
+
+            System.out.println(queryString);
+            Instant start = Instant.now();
+
+            testQuery.execute();
+
+            Instant end = Instant.now();
+            System.out.println("Query: " + counter + " evaluated in " + Duration.between(start, end));
+        }
+    }
 
     public static void queryingTypes() {
 
