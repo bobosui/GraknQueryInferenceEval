@@ -1,3 +1,6 @@
+import org.apache.hadoop.util.hash.Hash;
+
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -9,11 +12,25 @@ public class TestRule {
 
     public TestRule(String lhs, String rhs) {
 
-        String[] parsedLhs= lhs.split(",");
-        for (int i=0, i<)
+        this.lhs = new HashSet<>();
+        String[] parsedLhs= lhs.split(";\\s");
+        for (int i=0; i< parsedLhs.length; i++) {
+            TestAtom atom = new TestAtom(parsedLhs[i]);
+            this.lhs.add(atom);
+        }
 
+        this.rhs = new TestAtom(rhs);
     }
 
+    public void printme() {
+            lhs.iterator().forEachRemaining(atom -> {
+                System.out.print(atom.toString());
+                System.out.print(" ");
+            });
+
+        System.out.print("-> ");
+        System.out.println(this.rhs.toString());
+    }
 }
 
 class TestAtom {
@@ -22,11 +39,13 @@ class TestAtom {
     String predicate;
 
     public TestAtom(String full) {
-        full.split("\(").
+        String[] basic = full.split("\\(|,\\s|\\)");
+        this.predicate = basic[1];
+        this.var1 = basic[2];
+        this.var2 = basic[3];
     }
-    public TestAtom(String predicate, String var1, String var2) {
-        this.predicate = predicate;
-        this.var1 = var1;
-        this.var2 = var2;
+
+    public String toString() {
+        return "(" + this.predicate + ", " + this.var1 + ", " + this.var2 + ")";
     }
 }

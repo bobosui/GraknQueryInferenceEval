@@ -9,9 +9,10 @@ import java.io.FileNotFoundException;
 public class Main {
 
     public static void main(String[] args) {
-        Logger logger = (Logger) org.slf4j.LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
-        logger.setLevel(Level.OFF);
+    //    Logger logger = (Logger) org.slf4j.LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
+     //   logger.setLevel(Level.OFF);
 
+        AltRules.test();
         //NeoBenchmark.queryingTest();
         //NeoBenchmark.queryingTestGrid();
         //NeoBenchmark.transitiveQueryingTest();
@@ -27,7 +28,7 @@ public class Main {
         //GraknBenchmark.reasoningTest();
         //GraknBenchmark.reasoningTestGrid();
         //GraknBenchmark.queryingTest();
-        GraknBenchmark.queryingTestGrid();
+        //GraknBenchmark.queryingTestGrid();
 
         //DataGenerator.generateDataWithGraknCore();
         //GraknBenchmark.queryingTestGridSimple();
