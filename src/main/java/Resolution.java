@@ -16,10 +16,11 @@ public class Resolution {
     }
 
     public void execute() {
-        resolve();
-    }
-
-    public void resolve() {
 
     }
+}
+
+class Goal {
+    Set<TestAtom> atoms;
+    Set<Match> substitution;
 }

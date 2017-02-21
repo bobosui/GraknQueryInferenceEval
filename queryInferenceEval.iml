@@ -65,6 +65,7 @@
     <orderEntry type="library" name="Maven: ai.grakn:migration-base:0.11.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: commons-cli:commons-cli:1.3" level="project" />
     <orderEntry type="library" name="Maven: ai.grakn:grakn-client:0.11.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: ch.qos.logback:logback-core:1.1.7" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:19.0" level="project" />
     <orderEntry type="library" name="Maven: ai.grakn:titan-factory:0.11.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: ai.grakn:grakn-graph:0.11.0-SNAPSHOT" level="project" />
@@ -116,7 +117,6 @@
     <orderEntry type="library" name="Maven: antlr:antlr:2.7.7" level="project" />
     <orderEntry type="library" name="Maven: com.thinkaurelius.titan:titan-cassandra:1.1.0.grakn-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: ch.qos.logback:logback-classic:1.1.2" level="project" />
-    <orderEntry type="library" name="Maven: ch.qos.logback:logback-core:1.1.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.cassandra:cassandra-all:2.1.9" level="project" />
     <orderEntry type="library" name="Maven: com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:1.3" level="project" />
     <orderEntry type="library" name="Maven: org.antlr:antlr:3.5.2" level="project" />
