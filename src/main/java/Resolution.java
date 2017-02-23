@@ -1,3 +1,5 @@
+import java.security.Key;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,14 +33,13 @@ public class Resolution {
             System.out.println("Found data for " + predicate);
             return;
         } else {
-            Set<Match> dataSet = new HashSet<>();
-            data.put(predicate, dataSet);
+            data.include(predicate);
             for (int i=0; i<10; i++) {
                 String var1 = "a"+i;
                 int j = i+1;
                 String var2 = "a"+j;
-                Match newMatch = new Match(var1, var2);
-                dataSet.add(newMatch);
+                data.get(predicate).include(var1, var2);
+                data.get(predicate).include(var1, var1);
             }
         }
 
@@ -50,7 +51,7 @@ public class Resolution {
 class Goal {
     Resolution proof;
     Set<TestAtom> goal;
-    Match substitution;
+    HashMap<String, String> substitution;
     Set<Match> matches;
     Goal parent;
 
@@ -58,18 +59,27 @@ class Goal {
         this.proof = proof;
         this.goal = new HashSet<>();
         this.goal.add(atomGoal);
-        this.substitution = null;
+        this.substitution = new HashMap<>();
         this.parent = null;
+
     }
 
     public void resolve() {
-        for (TestAtom nextAtom : goal) {
-            proof.ensureData(nextAtom.predicate);
+        goal.forEach(
+                (TestAtom atom) -> {
+                    proof.ensureData(atom.predicate);
+                    MatchMap matches = proof.data.get(atom.predicate);
+                    matches.keySet().forEach(
+                    (String key) ->  {
+                            System.out.println("x=" + key);
+                            for (String nextVar : matches.get(key)) {
+                                System.out.println("\t y=" + nextVar);
+                            }
+                            //try to make a new goal by unifying with the head of some rule and resolve.
 
-            for (Match nextMatch : proof.data.get(nextAtom.predicate)) {
-                System.out.println(nextMatch.var1 + " and " + nextMatch.var2);
-            }
-        }
+
+            });
+        });
     }
 
 }
