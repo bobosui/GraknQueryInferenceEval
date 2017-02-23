@@ -14,11 +14,11 @@ public class AtomMatches extends HashMap<String, Set<Match>> {
 }
 
 class Match {
-    HashMap match;
+    String var1;
+    String var2;
 
-    public void Match(String x, String y) {
-        this.match = new HashMap();
-        this.match.put("var1", x);
-        this.match.put("var2", y);
+    public Match(String x, String y) {
+        this.var1=x;
+        this.var2=y;
     }
 }

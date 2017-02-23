@@ -36,12 +36,17 @@ public class AltRules {
         Set<TestRule> rules = new HashSet<>();
 
         rules.add(new TestRule("(relation1, x, y); (relation1, y, z)", "(relation1, x, z)"));
-        rules.add(new TestRule("(aaaa, x, y); (aaaa, y, z)", "(aaaa, x, z)"));
+        //rules.add(new TestRule("(aaaa, x, y); (aaaa, y, z)", "(aaaa, x, z)"));
 
         for (TestRule nextRule:rules) nextRule.printme();
 
+        TestAtom atomGoal = new TestAtom("(relation1, x, y)");
 
+        System.out.println(atomGoal.toString());
 
+        Resolution resolution = new Resolution(atomGoal, rules);
+
+        resolution.execute();
 
     }
 
