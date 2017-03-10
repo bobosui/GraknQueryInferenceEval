@@ -27,7 +27,21 @@ public class Main {
         //GraknBenchmark.reasoningTest();
         //GraknBenchmark.reasoningTestGrid();
         //GraknBenchmark.queryingTest();
-        GraknBenchmark.queryingTestGrid();
+        //GraknBenchmark.queryingTestGrid();
+
+       // try {
+       //     DataGenerator.generateRdfSupernode();
+       // } catch (FileNotFoundException e) {
+       //     e.printStackTrace();
+       // }
+        //RemoteSparqlBenchmark.test();
+/*       try {
+            RemoteSparqlBenchmark.urlGet();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } */
+
+        BlazegraphBenchmark.test();
 
         //DataGenerator.generateDataWithGraknCore();
         //GraknBenchmark.queryingTestGridSimple();

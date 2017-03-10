@@ -43,6 +43,36 @@ public class DataGenerator {
         out_writer.close();
     }
 
+
+    public static void generateRdfSupernode() throws FileNotFoundException {
+
+        String entity1, entity2, entity3;
+        int top = 1000000;
+
+
+        File outputFile = new File("supernode-dataset.nt");
+        PrintWriter out_writer = new PrintWriter(outputFile);
+
+        for (int count = 1; count <= top; count++) {
+            for (int level1 = 1; level1 <= 2; level1++) {
+                entity1 = "<grakn:entity_" + count + "_" + level1 + ">";
+                out_writer.println(entity1 + " <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <grakn:type_" + level1 + "> .");
+                for (int level2 = 1; level2 <= 2; level2++) {
+                    entity2 = "<grakn:entity_" + count + "_" + level1 + "_" + level2 + ">";
+                    out_writer.println(entity2 + " <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <grakn:type_" + level2 + "> .");
+                    out_writer.println(entity1 + " <grakn:relation> " + entity2 + " .");
+                    for (int level3 = 1; level3 <= 2; level3++) {
+                        entity3 = "<grakn:entity_" + count + "_" + level1 + "_" + level2 + "_" + level3 + ">";
+                        out_writer.println(entity3 + " <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <grakn:type_" + level3 + "> .");
+                        out_writer.println(entity2 + " <grakn:relation> " + entity3 + " .");
+                    }
+                }
+            }
+        }
+        out_writer.flush();
+        out_writer.close();
+    }
+
     public static void generateGraqlCsv() throws FileNotFoundException {
         String entity1, entity2, entity3;
         int right, bottom;
@@ -83,7 +113,7 @@ public class DataGenerator {
                 rel("vertical", var("x")));
         grid[sizeX][sizeY] = startRel.iterator().next().get("x").asRelation();
         try {
-            GraknBenchmark.graknGraph.commit();
+          //  GraknBenchmark.graknGraph.commit();
         } catch (GraknValidationException e) {
             e.printStackTrace();
         }
@@ -113,7 +143,7 @@ public class DataGenerator {
                     grid[x][y] = nextRel.iterator().next().get("rel").asRelation();
                 }
                 try {
-                    GraknBenchmark.graknGraph.commit();
+                   // GraknBenchmark.graknGraph.commit();
                 } catch (GraknValidationException e) {
                     e.printStackTrace();
                 }

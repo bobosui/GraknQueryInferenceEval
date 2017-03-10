@@ -20,13 +20,13 @@ public class GraknBenchmark {
 
             QueryBuilder qb = graknGraph.graql().infer(true);
 
-            for (int counter = 2000; counter < 10000; counter = counter + 2000) {
+            for (int counter = 100; counter < 10000; counter = counter + 100) {
 
-                //queryString = "match $x isa horizontal; limit " + counter + ";";
+                //queryString = "match $x isa relation1; limit " + counter + ";";
                 //queryString = "match $x isa horizontal;";
 
-                //queryString = "match ('rel-from':$x, 'rel-to':$y) isa horizontal; limit " + counter + ";";
-                queryString = "match ('rel-from':$x, 'rel-to':$y) isa horizontal;";
+                queryString = "match ('rel-from':$x, 'rel-to':$y) isa relation1; limit " + counter + ";";
+                //queryString = "match ('rel-from':$x, 'rel-to':$y) isa relation1;";
 
                 testQuery = qb.parse(queryString);
 
@@ -43,12 +43,12 @@ public class GraknBenchmark {
 
         QueryBuilder qb = graknGraph.graql().infer(true);
 
-        for (int counter = 1000; counter < 10000; counter = counter + 1000) {
+        for (int counter = 100; counter < 10000; counter = counter + 100) {
 
-            queryString = "match $x isa diagonal; limit " + counter + ";";
+            //queryString = "match $x isa diagonal; limit " + counter + ";";
             //queryString = "match $x isa diagonal;";
 
-            //queryString = "match ('rel-from':$x, 'rel-to':$y) isa diagonal; limit " + counter + ";";
+            queryString = "match ('rel-from':$x, 'rel-to':$y) isa diagonal; limit " + counter + ";";
             //queryString = "match ('rel-from':$x, 'rel-to':$y) isa diagonal;";
 
             testQuery = qb.parse(queryString);
@@ -106,7 +106,7 @@ public class GraknBenchmark {
 
                 testQuery = qb2.parse(queryString);
 
-                System.out.println(queryString);
+                //System.out.println(queryString);
                 Instant start = Instant.now();
 
                 testQuery.execute();
