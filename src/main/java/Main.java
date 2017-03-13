@@ -41,6 +41,7 @@ public class Main {
             e.printStackTrace();
         } */
 
+        BlazegraphBenchmark.load();
         BlazegraphBenchmark.test();
 
         //DataGenerator.generateDataWithGraknCore();
